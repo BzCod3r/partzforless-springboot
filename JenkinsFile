@@ -23,6 +23,30 @@ pipeline{
                 }
             }
         }
+
+        stage('Checkstyle Analysis'){
+            steps{
+                sh 'mvn checkstyle:checkstyle'
+            }
+        }
+
+        stage('Sonar Analysis'){
+            environment{
+                scannerHome=tool 'sonar4.7'
+            }
+            steps{
+                withSonarQubeEnv('sonar'){
+                    sh '''${schannerHome}/bin/sonar-scanner -Dsonar.projectKey=partzforlesssring \
+                    -Dsonar.projectName=partsforlesSring \
+                    -Dsonar.projectVersion?=1.0 \
+                    -Dsonar.sources=src \
+                    -Dsonar.java.binaries=target/test-classes/com/visualpathit/account/controllerTest \
+                    -Dsonar.jacoco.reportsPath=target/jacoco.exec \
+                    -Dsonar.java.checkstyle.reportsPath=target/checkstyle-result.xml
+                    '''
+                }
+            }
+        }
     }
 
 }
