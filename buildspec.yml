@@ -1,13 +1,37 @@
 version: 0.2
+
 phases:
+  pre_build:
+    commands:
+      - echo logging into Amazon ECR started on `date
+      - aws --version
+      - echo logging into Amazon ECR.....
+      - aws ecr get-login-password --region eu-central-1 | docker login --username AWS --password-stdin 741124795948.dkr.ecr.eu-central-1.amazonaws.com
+      - echo setting repository URI...
+      - REPOSITORY_URI=741124795948.dkr.ecr.eu-central-1.amazonaws.com/partzforless_springboot
+      - echo "Setting image tag..."
+      - IMAGE_TAG=build-$(echo $CODEBUILD_BUILD_ID | awk -F":" '{print $2}')
+
   build:
     commands:
-      - echo Packaging JAR file...
-      - mvn clean package
+      - echo "Building and tagging started image on $(date)"
+      - echo "Running mvn clean install..."
+      - mvn clean install
+      - docker build -t $REPOSITORY_URI:latest .
+      - echo "Tagging the Docker image..."
+      - docker tag $REPOSITORY_URI:latest $REPOSITORY_URI:$IMAGE_TAG
+
   post_build:
     commands:
-      - echo Build complete
+      - echo "Pushing Docker image to Amazon ECR started on $(date)"
+      - echo "Pushing to repository..."
+      - docker push $REPOSITORY_URI:latest
+      - docker push $REPOSITORY_URI:$IMAGE_TAG
+      - echo "Setting container name..."
+      - DOCKER_CONTAINER_NAME=partzforless_springboot
+      - echo "Writing image definition file..."
+      - cat imagedefinitions.json
+
 artifacts:
   files:
-    - target/partzforless-springboot.jar
-  discard_paths: yes
+    - imagedefinitions.json
