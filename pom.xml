@@ -163,7 +163,7 @@
                 </dependencies>
             </plugin>
         </plugins>
-        <finalName>partzforless-spring</finalName>
+        <finalName>partzforless-springboot</finalName>
     </build>
 
 </project>
