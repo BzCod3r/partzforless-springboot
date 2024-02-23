@@ -17,9 +17,9 @@ phases:
       - echo "Building and tagging started image on $(date)"
       - echo "Running mvn clean install..."
       - mvn clean install
-      - docker build -t $REPOSITORY_URI:latest .
+      - docker build -t 741124795948.dkr.ecr.eu-central-1.amazonaws.com/partzforless_springboot:latest .
       - echo "Tagging the Docker image..."
-      - docker tag $REPOSITORY_URI:latest $REPOSITORY_URI:$IMAGE_TAG
+      - docker tag 741124795948.dkr.ecr.eu-central-1.amazonaws.com/partzforless_springboot:latest 741124795948.dkr.ecr.eu-central-1.amazonaws.com/partzforless_springboot:build-$(echo $CODEBUILD_BUILD_ID | awk -F":" '{print $2}')
 
   post_build:
     commands:
