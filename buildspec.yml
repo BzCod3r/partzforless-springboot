@@ -1,55 +1,58 @@
 version: 0.2
 
-
 phases:
+  install:
+    runtime-versions:
+      java: corretto11
   build:
     commands:
-      - echo Entered the build phase...
-      - mvn clean package
+      - mvn clean install
   post_build:
     commands:
-      - echo Build completed successfully
+      - echo Build completed
 artifacts:
   files:
-    - target/partzforless-springboot.jar
-  discard_paths: yes
+    - target/*.jar
+    - scripts/*.sh
+    - appspec.yml
+  discard-paths: yes
 
 
 
-#phases:
- # pre_build:
- #   commands:
- #     - echo logging into Amazon ECR started on `date`
- #     - aws --version
- #     - echo logging into Amazon ECR.....
- #     - aws ecr get-login-password --region eu-central-1 | docker login --username AWS --password-stdin 741124795948.dkr.ecr.eu-central-1.amazonaws.com
- #     - echo setting repository URI...
- #     - REPOSITORY_URI=741124795948.dkr.ecr.eu-central-1.amazonaws.com/partzforless_springboot
- #     - echo "Setting image tag..."
- #     - IMAGE_TAG=build-$(echo $CODEBUILD_BUILD_ID | awk -F":" '{print $2}')
+  #phases:
+  # pre_build:
+  #   commands:
+  #     - echo logging into Amazon ECR started on `date`
+  #     - aws --version
+  #     - echo logging into Amazon ECR.....
+  #     - aws ecr get-login-password --region eu-central-1 | docker login --username AWS --password-stdin 741124795948.dkr.ecr.eu-central-1.amazonaws.com
+  #     - echo setting repository URI...
+  #     - REPOSITORY_URI=741124795948.dkr.ecr.eu-central-1.amazonaws.com/partzforless_springboot
+  #     - echo "Setting image tag..."
+  #     - IMAGE_TAG=build-$(echo $CODEBUILD_BUILD_ID | awk -F":" '{print $2}')
 
-#  build:
-#    commands:
-#      - echo Building and tagging started image on `date`
-#      - echo Running mvn clean install...
-#      - mvn clean install
-#      - docker build -t 741124795948.dkr.ecr.eu-central-1.amazonaws.com/partzforless_springboot:latest .
-#      - echo "Tagging the Docker image..."
-#      - docker tag 741124795948.dkr.ecr.eu-central-1.amazonaws.com/partzforless_springboot:latest 741124795948.dkr.ecr.eu-central-1.amazonaws.com/partzforless_springboot:build-$(echo $CODEBUILD_BUILD_ID | awk -F":" '{print $2}')
-#
-#  post_build:
-#    commands:
-#      - echo "Pushing Docker image to Amazon ECR started on $(date)"
-#      - echo "Pushing to repository..."
-#      - docker push 741124795948.dkr.ecr.eu-central-1.amazonaws.com/partzforless_springboot:latest
-#      - docker push 741124795948.dkr.ecr.eu-central-1.amazonaws.com/partzforless_springboot:build-$(echo $CODEBUILD_BUILD_ID | awk -F":" '{print $2}')
-#      - echo "Setting container name..."
-#      - export DOCKER_CONTAINER_NAME=partzforless_springboot
-#      - echo Writing image definition file...
-#      - printf '[{"name":"%s","imageUri":"%s"}]' $DOCKER_CONTAINER_NAME $REPOSITORY_URI:$IMAGE_TAG > imagedefinition.json
-#      - echo $DOCKER_CONTAINER_NAME
-#      - echo printing imagedefinition.json
+  #  build:
+  #    commands:
+  #      - echo Building and tagging started image on `date`
+  #      - echo Running mvn clean install...
+  #      - mvn clean install
+  #      - docker build -t 741124795948.dkr.ecr.eu-central-1.amazonaws.com/partzforless_springboot:latest .
+  #      - echo "Tagging the Docker image..."
+  #      - docker tag 741124795948.dkr.ecr.eu-central-1.amazonaws.com/partzforless_springboot:latest 741124795948.dkr.ecr.eu-central-1.amazonaws.com/partzforless_springboot:build-$(echo $CODEBUILD_BUILD_ID | awk -F":" '{print $2}')
+  #
+  #  post_build:
+  #    commands:
+  #      - echo "Pushing Docker image to Amazon ECR started on $(date)"
+  #      - echo "Pushing to repository..."
+  #      - docker push 741124795948.dkr.ecr.eu-central-1.amazonaws.com/partzforless_springboot:latest
+  #      - docker push 741124795948.dkr.ecr.eu-central-1.amazonaws.com/partzforless_springboot:build-$(echo $CODEBUILD_BUILD_ID | awk -F":" '{print $2}')
+  #      - echo "Setting container name..."
+  #      - export DOCKER_CONTAINER_NAME=partzforless_springboot
+  #      - echo Writing image definition file...
+  #      - printf '[{"name":"%s","imageUri":"%s"}]' $DOCKER_CONTAINER_NAME $REPOSITORY_URI:$IMAGE_TAG > imagedefinition.json
+  #      - echo $DOCKER_CONTAINER_NAME
+  #      - echo printing imagedefinition.json
 
-#artifacts:
- # files:
+  #artifacts:
+  # files:
   #  - imagedefinitions.json
