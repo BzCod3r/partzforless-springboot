@@ -5,3 +5,5 @@ build laptop:
         - touch build/computer.txt
         - echo "Mainboard" >> build/computer.txt
         - cat build/computer.txt
+        - echo "Keyboard" >> build/computer.txt
+        - cat build/computer.txt
