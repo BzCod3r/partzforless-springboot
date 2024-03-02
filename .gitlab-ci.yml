@@ -10,5 +10,6 @@ build laptop:
         - cat build/computer.txt
 
 test laptop:
+    image: alpine
     script:
         - test -f build/computer.txt
