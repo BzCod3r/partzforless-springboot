@@ -22,3 +22,5 @@ test laptop:
     image: alpine
     script:
         - test -f build/computer.txt
+        - grep "Mainboard" build/computer.txt
+        - grep "Keyboard" build/computer.txt
