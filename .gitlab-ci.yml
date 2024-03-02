@@ -1,2 +1,7 @@
-test:
-    script: echo "hello Muhammad Mansoor"
+build laptop:
+    script:
+        - echo "Building a laptop"
+        - mkdir build
+        - touch build/computer.txt
+        - echo "Mainboard" >> build/computer.txt
+        - cat build/computer.txt
