@@ -1,4 +1,5 @@
 build laptop:
+    image: alpine
     script:
         - echo "Building a laptop"
         - mkdir build
