@@ -4,15 +4,17 @@ stages:
 
 build laptop:
     stage: build
+    variables:
+        build_file_name: laptop.txt
     image: alpine
     script:
         - echo "Building a laptop"
         - mkdir build
-        - touch build/computer.txt
-        - echo "Mainboard" >> build/computer.txt
-        - cat build/computer.txt
-        - echo "Keyboard" >> build/computer.txt
-        - cat build/computer.txt
+        - touch build/$laptop.txt
+        - echo "Mainboard" >> build/$laptop.txt
+        - cat build/$laptop.txt
+        - echo "Keyboard" >> build/$laptop.txt
+        - cat build/$laptop.txt
     artifacts:
         paths:
             - build
@@ -21,6 +23,6 @@ test laptop:
     stage: test
     image: alpine
     script:
-        - test -f build/computer.txt
-        - grep "Mainboard" build/computer.txt
-        - grep "Keyboard" build/computer.txt
+        - test -f build/$laptop.txt
+        - grep "Mainboard" build/$laptop.txt
+        - grep "Keyboard" build/$laptop.txt
