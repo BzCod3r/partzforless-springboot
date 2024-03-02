@@ -13,6 +13,9 @@ build laptop:
         - cat build/computer.txt
         - echo "Keyboard" >> build/computer.txt
         - cat build/computer.txt
+    artifacts:
+        paths:
+            - build
 
 test laptop:
     stage: test
