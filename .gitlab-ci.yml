@@ -1,4 +1,9 @@
+stages:
+    - build
+    - test
+
 build laptop:
+    stage: build
     image: alpine
     script:
         - echo "Building a laptop"
@@ -10,6 +15,7 @@ build laptop:
         - cat build/computer.txt
 
 test laptop:
+    stage: test
     image: alpine
     script:
         - test -f build/computer.txt
