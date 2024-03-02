@@ -1,11 +1,12 @@
 stages:
     - build
     - test
+    
+variables:
+    build_file_name: laptop.txt
 
 build laptop:
     stage: build
-    variables:
-        build_file_name: laptop.txt
     image: alpine
     script:
         - echo "Building a laptop"
