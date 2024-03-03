@@ -19,3 +19,5 @@ deploy to s3:
       entrypoint: [""]
   script:
     - aws --version
+    - echo "Hello s3" >> test-txt
+    - aws cp test.txt s3://mygitlabcicdtestbucket/test.txt
