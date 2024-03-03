@@ -10,4 +10,4 @@ build project:
     - mvn clean install
   artifacts:
     paths:
-      - build
+      - target/*.jar
