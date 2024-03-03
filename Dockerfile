@@ -1,12 +1,13 @@
+# Stage 1: Build the application
 FROM maven:3.9.6 AS build
 WORKDIR /app
-COPY pom.xml /app
-RUN mvn dependency:resolve
-COPY . /app
-RUN mvn clean
-RUN mvn package  -DskipTests -X
+COPY pom.xml .
+COPY src ./src
+RUN mvn clean install
 
-FROM openjdk
-COPY --from=build /app/target/*.jar app.jar
+# Stage 2: Create the final Docker image
+FROM openjdk:17-alpine
+WORKDIR /app
+COPY --from=build /app/target/*.jar ./demo-aws.jar
 EXPOSE 8080
-CMD ["Java","-jar","app.jar"]
+CMD ["java", "-jar", "demo-aws.jar"]
