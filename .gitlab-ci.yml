@@ -1,6 +1,12 @@
+stages:
+  - build
 build project:
   image: alpine
   stage: build
   script:
+    - apk update
     - apk add maven
     - mvn clean install
+  artifacts:
+    paths:
+      - build
