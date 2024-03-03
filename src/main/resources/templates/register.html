@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="x-ua-compatible" content="IE-edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="../static/css/styles.css" th:href="@{/css/styles.css}">
+    <link
+            href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
+            rel="stylesheet"
+            integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
+            crossorigin="anonymous"
+    />
+    <link href='https://fonts.googleapis.com/css?family=Poppins' rel='stylesheet'>
+
+    <title>Register | Partzforless</title>
+</head>
+<body>
+<div class="wrapper">
+    <div class="container main">
+        <div class="row" id="row">
+            <div class="col-md-6 side-image">
+                <!--------image--------->
+                <div class="text">
+                </div>
+            </div>
+            <div class="col-md-6 right">
+                <div class="input-box">
+                    <header>Create user</header>
+                    <form th:action="@{/createUser}" method="post">
+                        <div th:if="${userexists}">
+                            <p class="text-danger" style="font-size: 12px;">User exists!</p>
+                        </div>
+                        <div class="input-field">
+                            <input type="text" class="input" id="username" name="username"
+                                   required autocomplete="off">
+                            <label for="username">Username</label>
+                        </div>
+                        <div class="input-field">
+                            <input type="password" class="input" id="password" name="password"
+
+                                   required autocomplete="off">
+                            <label for="password">Password</label>
+                        </div>
+                        <div class="input-field">
+                            <button class="submit">Create</button>
+                        </div>
+                    </form>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

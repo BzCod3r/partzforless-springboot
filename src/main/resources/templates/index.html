@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org" th:replace="base::Layout(~{::body})">
+<head>
+    <meta charset="UTF-8">
+    <title>Partzforless</title>
+</head>
+<body>
+<div th:replace="~{components/loader::loader}">asdf</div>
+<div class="container mt-5">
+    <div class="row">
+        <div class="col">
+            <div class="card">
+                <div class="card-header bg-warning text-dark">
+                    <h5 class="mb-0">All urls</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col">
+                            <h4>Total Urls: <h4 th:text="${totalurls}"></h4></h4>
+                        </div>
+                        <div class="col">
+                            <form th:action="@{/refresh}" method="post">
+                                <div class="d-flex justify-content-between">
+                                    <div id="content">
+                                        <span th:if="${processRunning}" th:text="${currentCount}">  :Process running</span>
+                                    </div>
+                                    <div id="refresh-loader" th:if="${processRunning}"></div>
+                                    <button type="submit" class="btn btn-dark" th:if="${processRunning}">Stop</button>
+                                    <button type="submit" class="btn btn-dark" th:if="${!processRunning}">Refresh
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col">
+            <div class="card">
+                <div class="card-header bg-warning text-dark">
+                    <h5 class="mb-0">Out of stock</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col">
+                            <h4>Out of Stock Urls: <h4 th:text="${out}"></h4></h4>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row mt-4">
+        <div class="col">
+            <div class="card">
+                <div class="card-header bg-warning text-dark">
+                    <h5 class="mb-0">Recent Update</h5>
+                </div>
+                <div class="card-body">
+                    <div class="col">
+                        <h4>Recent Urls: <h4 th:text="${recent}"></h4></h4>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col">
+            <div class="card">
+                <div class="card-header bg-warning text-dark">
+                    <h5 class="mb-0">Recent Update</h5>
+                </div>
+                <div class="card-body">
+                    <div class="col">
+                        <form method="get" th:action="@{/changeip}">
+                            <button type="submit" class="btn btn-dark">Refresh
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script th:inline="javascript">
+    function showLoader() {
+        const tracker = document.getElementById('tracker').value;
+        const url = document.getElementById('url').value;
+        if (tracker !== "" && url !== "")
+            document.getElementById('loader-container').style.display = 'flex'
+    }
+
+    function hiderLoader() {
+        document.getElementById('loader-container').style.display = 'none'
+    }
+
+</script>
+</body>
+</html>

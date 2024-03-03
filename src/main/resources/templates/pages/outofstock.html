@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org" th:replace="base::Layout(~{::body})">
+<head>
+    <meta charset="UTF-8">
+    <title>All urls</title>
+</head>
+<body>
+<div class="container mt-5">
+
+    <div class="card">
+        <div class="card-header bg-warning text-dark">
+            <h2 class="mb-0">Out of stock</h2>
+        </div>
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th>#</th>
+                <th>Tracker</th>
+                <th>URL</th>
+                <th>Update time</th>
+                <th>Status</th>
+            </tr>
+            </thead>
+            <tbody>
+            <div th:each="url : ${urls}">
+                <tr>
+                    <td th:text="${url.id}"></td>
+                    <td th:text="${url.tracker}"></td>
+                    <td style="width: 10px;"><a th:href="${url.url}" th:text="${url.url}" ></a></td>
+                    <td th:text="${url.updateDate}"></td>
+                    <th>
+                        <div th:if="${url.status==0}">
+                            <span style="
+                            background-color: #00da00;
+                            color: white;
+                            padding: .4rem;
+                            border-radius: 10px">
+                                In Stock</span>
+                        </div>
+                        <div th:if="${url.status==1}">
+                            <span style="
+                            background-color: #da0000;
+                            color: white;
+                            padding: .4rem;
+                            border-radius: 10px">
+                                Out Of Stock</span>
+                        </div>
+
+                    </th>
+                </tr>
+            </div>
+            </tbody>
+        </table>
+    </div>
+</div>
+</body>
+</html>

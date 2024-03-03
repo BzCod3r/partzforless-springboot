@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org"
+      xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<header>
+    <nav
+            class="navbar navbar-expand-md navbar-light bg-warning rounded"
+            aria-label="Eleventh navbar example"
+    >
+        <div class="container">
+            <a class="navbar-brand" href="">Partzforless</a>
+            <button
+                    class="navbar-toggler"
+                    type="button"
+                    data-bs-toggle="collapse"
+                    data-bs-target="#navbarSupportedContent"
+                    aria-controls="navbarSupportedContent"
+                    aria-expanded="false"
+                    aria-label="Toggle navigation"
+            >
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        <a th:classappend="${module == 'home' ? 'nav-link active' : 'nav-link '}" th:href="@{/}">Home</a
+                        >
+                    </li>
+                    <li class="nav-item">
+                        <a th:classappend="${module == 'all'? 'nav-link active':'nav-link'}"
+                           th:href="@{/all}">AllUrls</a>
+                    </li>
+                    <li class="nav-item">
+                        <a th:classappend="${module == 'out'?'nav-link active':'nav-link'}"
+                           th:href="@{/outofstock}">OutOfStock</a>
+                    </li>
+                    <li class="nav-item">
+                        <a th:classappend="${module == 'recent'?'nav-link active':'nav-link'}" th:href="@{/recent}">RecentUpdates</a>
+                    </li>
+                </ul>
+                <div class="d-flex align-items-center min-vh-10">
+                    <h4 class="me-3  mt-2" th:inline="text"><span th:remove="tag" sec:authentication="name"></span></h4>
+                    <form th:action="@{/logout}" method="post">
+                        <input type="submit" class="btn btn-dark" value="Sign Out"/>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </nav>
+</header>
+
+</body>
+</html>
