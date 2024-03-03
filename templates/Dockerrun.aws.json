@@ -1,14 +1,11 @@
 {
   "AWSEBDockerrunVersion": "1",
   "Image": {
-    "Name": "$CI_REGISTRY_IMAGE:1"
+    "Name": "nginx"
   },
-  "Authentication": {
-    "Bucket": "$AWS_S3_BUCKET",
-    "Key": "auth.json"
-  },
-  "Ports": {
-    "hostPort": 8080,
-    "containerPort": 8080
-  }
+  "Ports": [
+    {
+      "ContainerPort": 80
+    }
+  ]
 }
