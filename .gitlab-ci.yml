@@ -2,6 +2,8 @@ stages:
   - build
   - package
   - deploy
+variables:
+  APP_VERSION: $CI_PIPELINE_IID
 build project:
   image: alpine
   stage: build
@@ -10,6 +12,7 @@ build project:
     - apk update
     - apk add maven
     - mvn clean install
+    - echo $APP_VERSION > target/version.html
   artifacts:
     paths:
       - target/*.jar
