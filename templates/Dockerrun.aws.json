@@ -1,11 +1,11 @@
 {
   "AWSEBDockerrunVersion": "1",
   "Image": {
-    "Name": "nginx"
+    "Name": "registry.gitlab.com/bzcoder96/my-first-pipeline:$CI_COMMIT_SHORT_SHA"
   },
   "Ports": [
     {
-      "ContainerPort": 80
+      "ContainerPort": 8080
     }
   ]
 }
