@@ -2,5 +2,5 @@ build project:
   image: alpine
   stage: build
   script:
-    - sudo apt-get install maven
+    - apk add maven
     - mvn clean install
