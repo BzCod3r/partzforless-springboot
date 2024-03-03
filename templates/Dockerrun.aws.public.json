@@ -1,0 +1,11 @@
+{
+  "AWSEBDockerrunVersion": "1",
+  "image": {
+    "name": "nginx"
+  },
+  "Ports": [
+    {
+      "ContainerPort": 80
+    }
+  ]
+}
