@@ -1,5 +1,6 @@
 stages:
   - build
+  - -deploy
 build project:
   image: alpine
   stage: build
@@ -11,3 +12,10 @@ build project:
   artifacts:
     paths:
       - target/*.jar
+deploy to s3:
+  stage: deploy
+  image:
+      name: amazon/aws-cli
+      entrypoint: [""]
+  script:
+    - aws --version
