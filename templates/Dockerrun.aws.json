@@ -1,0 +1,13 @@
+{
+  "AWSEBDockerrunVersion": "1",
+  "Image": {
+    "Name": "$CI_REGISTRY_IMAGE:1"
+  },
+  "Authentication": {
+    "Bucket": "$AWS_S3_BUCKET",
+    "Key": "auth.json"
+  },
+  "Ports": {
+    "ContainerPort": 80
+  }
+}

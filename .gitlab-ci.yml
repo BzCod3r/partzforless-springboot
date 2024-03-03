@@ -1,6 +1,7 @@
 stages:
   - build
   - package
+  - deploy
 build project:
   image: alpine
   stage: build
@@ -22,4 +23,19 @@ build docker image:
     - docker build -t $CI_REGISTRY_IMAGE -t $CI_REGISTRY_IMAGE:1 .
     - docker image ls
     - docker push --all-tags $CI_REGISTRY_IMAGE
-
+deploy to production:
+  image:
+    name: amazon/aws-cli:2.15.25
+    entrypoint: [""]
+  stage: deploy
+  environment: production
+  script:
+    - aws --version
+    - apk add --no-cache gettext
+    - export DEPLOY_TOKEN=$(echo $GITLAB_DEPLOY_TOKEN | td -d "\n | base64)
+    - envsubst < templates/Dockerrun.aws.json > Dockerrun.aws.json
+    - envsubst < templates/auth.json > auth.json
+    - cat Dockerrun.aws.json
+    - cat auth.json
+    - aws s3 cp Dockerrun.aws.json s3://$AWS_S3_BUCKET/Dockerrun.aws.json
+    - aws s3 cp config.json s3://$AWS_S3_BUCKET/config.json
