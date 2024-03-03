@@ -33,7 +33,7 @@ deploy to production:
     - aws --version
     - yum update -y
     - yum install -y gettext
-    - export DEPLOY_TOKEN=$(echo $GITLAB_DEPLOY_TOKEN | td -d "\n | base64)
+    - export DEPLOY_TOKEN=$(echo $GITLAB_DEPLOY_TOKEN | td -d "\n" | base64)
     - envsubst < templates/Dockerrun.aws.json > Dockerrun.aws.json
     - envsubst < templates/auth.json > auth.json
     - cat Dockerrun.aws.json
