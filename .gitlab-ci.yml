@@ -11,6 +11,8 @@ deploy:
   image: alpine
   script:
     # Build the Spring Boot application
+    - apk update
+    - apk add maven
     - mvn clean install -DskipTests=true
 
     # Upload the JAR file to S3
