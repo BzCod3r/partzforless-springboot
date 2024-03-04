@@ -1,29 +1,36 @@
 stages:
+  - build
   - deploy
 
 variables:
   APP_VERSION: $CI_PIPELINE_IID
 
 
+build project:
+  image: alpine
+  stage: build
+  script:
+    - mkdir /build
+    - apk update
+    - apk add maven
+    - mvn clean install
+  artifacts:
+    paths:
+      - ./target/*.jar
+
 
 deploy:
   stage: deploy
-  image: alpine
+  image:
+    name: amazon/aws-cli:2.15.25
+    entrypoint: [ "" ]
   script:
-    # Build the Spring Boot application
-    - apk update
-    - apk add maven
-    - mvn clean install -DskipTests=true
-
-    # Upload the JAR file to S3
-    - aws s3 cp ./target/partzforless-springboot.jar s3://$AWS_S3_BUCKET/partzforless-springboot.jar
-    - - export DEPLOY_TOKEN=$(echo $GITLAB_DEPLOY_TOKEN | td -d "\n" | base64)
-
-
-    # Create an application version in Elastic Beanstalk
-    - aws elasticbeanstalk create-application-version --application-name $APP_NAME --version-label $APP_VERSION --source-bundle S3Bucket=$AWS_S3_BUCKET,S3Key=application.jar
-    # Update the environment to use the new application version
-    - aws elasticbeanstalk update-environment --application-name $APP_NAME --version-label $APP_VERSION --environment-name $APP_ENV_NAME
+      - yum update -y
+      - yum install -y gettext
+      - export DEPLOY_TOKEN=$(echo $GITLAB_DEPLOY_TOKEN | td -d "\n" | base64)
+      - aws s3 cp ./target/partzforless-springboot.jar s3://$AWS_S3_BUCKET/partzforless-springboot.jar
+      - aws elasticbeanstalk create-application-version --application-name $APP_NAME --version-label $APP_VERSION --source-bundle S3Bucket=$AWS_S3_BUCKET,S3Key=partzforless-springboot.jar
+      - aws elasticbeanstalk update-environment --application-name $APP_NAME --version-label $APP_VERSION --environment-name $APP_ENV_NAME
 
 
 
