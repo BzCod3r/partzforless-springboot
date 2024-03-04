@@ -8,6 +8,7 @@ variables:
 
 deploy:
   stage: deploy
+  image: alpine
   script:
     # Build the Spring Boot application
     - ./mvnw package -DskipTests=true
