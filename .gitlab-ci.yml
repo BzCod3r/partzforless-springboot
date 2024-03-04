@@ -1,6 +1,6 @@
 stages:
   - deploy
-  -
+
 variables:
   APP_VERSION: $CI_PIPELINE_IID
 
