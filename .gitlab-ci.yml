@@ -1,89 +1,50 @@
 stages:
   - build
-
+  - package
+  - deploy
 variables:
   APP_VERSION: $CI_PIPELINE_IID
-
-
 build project:
   image: alpine
   stage: build
   script:
+    - mkdir /build
     - apk update
     - apk add maven
     - mvn clean install
     - echo $APP_VERSION > target/version.html
-
   artifacts:
     paths:
       - target/*.jar
-
-
-
-
-
-
-
-#stages:
-#  - build
-#  - package
-#  - deploy
-#variables:
-#  APP_VERSION: $CI_PIPELINE_IID
-#build project:
-#  image: alpine
-#  stage: build
-#  script:
-#    - mkdir /build
-#    - apk update
-#    - apk add maven
-#    - mvn clean install
-#    - echo $APP_VERSION > target/version.html
-#  artifacts:
-#    paths:
-#      - target/*.jar
-#
-#build:
-#  stage: build
-#  script:
-#    - - echo $CI_REGISTRY_PASSWORD | docker login -u $CI_REGISTRY_USER $CI_REGISTRY --password-stdin
-
-#    - docker build -t $DOCKER_REGISTRY/your-repository .
-#    - docker push $DOCKER_REGISTRY/your-repository
-#    -
-#build docker image:
-#  stage: package
-#  image: docker:25.0.3
-#  services:
-#    - docker:25.0.3-dind
-#  script:
-#    - echo $CI_REGISTRY_PASSWORD | docker login -u $CI_REGISTRY_USER $CI_REGISTRY --password-stdin
-#    - docker build -t $CI_REGISTRY_IMAGE -t $CI_REGISTRY_IMAGE:$APP_VERSION .
-#    - docker image ls
-#    - docker push --all-tags $CI_REGISTRY_IMAGE
-#deploy to production:
-#  image:
-#    name: amazon/aws-cli:2.15.25
-#    entrypoint: [""]
-#  stage: deploy
-#  variables:
-#    APP_NAME: mywebsite
-#    APP_ENV_NAME: Mywebsite-env
-#  environment: production
-#  script:
-#    - aws --version
-#    - yum update -y
-#    - yum install -y gettext
-#    - export DEPLOY_TOKEN=$(echo $GITLAB_DEPLOY_TOKEN | td -d "\n" | base64)
-#    - envsubst < templates/Dockerrun.aws.json > Dockerrun.aws.json
-#    - envsubst < templates/auth.json > auth.json
-#    - cat Dockerrun.aws.json
-#    - cat auth.json
-#    - aws s3 cp Dockerrun.aws.json s3://$AWS_S3_BUCKET/Dockerrun.aws.json
-#    - aws s3 cp auth.json s3://$AWS_S3_BUCKET/auth.json
-#    - aws elasticbeanstalk create-application-version --application-name $APP_NAME --version-label $APP_VERSION --source-bundle S3Bucket=$AWS_S3_BUCKET,S3Key=Dockerrun.aws.json
-#    - aws elasticbeanstalk update-environment --application-name $APP_NAME --version-label $APP_VERSION --environment-name $APP_ENV_NAME
-
-
-
-
+build docker image:
+  stage: package
+  image: docker:25.0.3
+  services:
+    - docker:25.0.3-dind
+  script:
+    - echo $CI_REGISTRY_PASSWORD | docker login -u $CI_REGISTRY_USER $CI_REGISTRY --password-stdin
+    - docker build -t $CI_REGISTRY_IMAGE -t $CI_REGISTRY_IMAGE:$APP_VERSION .
+    - docker image ls
+    - docker push --all-tags $CI_REGISTRY_IMAGE
+deploy to production:
+  image:
+    name: amazon/aws-cli:2.15.25
+    entrypoint: [""]
+  stage: deploy
+  variables:
+    APP_NAME: mywebsite
+    APP_ENV_NAME: Mywebsite-env
+  environment: production
+  script:
+    - aws --version
+    - yum update -y
+    - yum install -y gettext
+    - export DEPLOY_TOKEN=$(echo $GITLAB_DEPLOY_TOKEN | td -d "\n" | base64)
+    - envsubst < templates/Dockerrun.aws.json > Dockerrun.aws.json
+    - envsubst < templates/auth.json > auth.json
+    - cat Dockerrun.aws.json
+    - cat auth.json
+    - aws s3 cp Dockerrun.aws.json s3://$AWS_S3_BUCKET/Dockerrun.aws.json
+    - aws s3 cp auth.json s3://$AWS_S3_BUCKET/auth.json
+    - aws elasticbeanstalk create-application-version --application-name $APP_NAME --version-label $APP_VERSION --source-bundle S3Bucket=$AWS_S3_BUCKET,S3Key=Dockerrun.aws.json
+    - aws elasticbeanstalk update-environment --application-name $APP_NAME --version-label $APP_VERSION --environment-name $APP_ENV_NAME
