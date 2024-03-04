@@ -10,13 +10,12 @@ build project:
   image: alpine
   stage: build
   script:
-    - mkdir /build
     - apk update
     - apk add maven
     - mvn clean install
   artifacts:
     paths:
-      - ./target/*.jar
+      - target/*.jar
 
 
 deploy:
