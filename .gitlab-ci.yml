@@ -1,37 +1,30 @@
 stages:
-  - build
-  - package
   - deploy
+  -
 variables:
   APP_VERSION: $CI_PIPELINE_IID
-build project:
-  image: alpine
-  stage: build
-  script:
-    - mkdir /build
-    - apk update
-    - apk add maven
-    - mvn clean install
-    - echo $APP_VERSION > target/version.html
-  artifacts:
-    paths:
-      - target/*.jar
 
-build:
-  stage: build
-  script:
-    - echo $CI_REGISTRY_PASSWORD | docker login -u $CI_REGISTRY_USER $CI_REGISTRY --password-stdin
-    - docker build -t $CI_REGISTRY_IMAGE -t $CI_REGISTRY_IMAGE:$APP_VERSION .
-    - docker push --all-tags $CI_REGISTRY_IMAGE
 
 
 deploy:
   stage: deploy
-  variables:
-    APP_NAME: mywebsite
-    APP_ENV_NAME: Mywebsite-env
   script:
+    # Build the Spring Boot application
+    - ./mvnw package -DskipTests=true
+
+    # Upload the JAR file to S3
     - aws s3 cp ./target/partzforless-springboot.jar s3://$AWS_S3_BUCKET/partzforless-springboot.jar
-    - export DEPLOY_TOKEN=$(echo $GITLAB_DEPLOY_TOKEN | td -d "\n" | base64)
+    - - export DEPLOY_TOKEN=$(echo $GITLAB_DEPLOY_TOKEN | td -d "\n" | base64)
+
+
+    # Create an application version in Elastic Beanstalk
     - aws elasticbeanstalk create-application-version --application-name $APP_NAME --version-label $APP_VERSION --source-bundle S3Bucket=$AWS_S3_BUCKET,S3Key=application.jar
+    # Update the environment to use the new application version
     - aws elasticbeanstalk update-environment --application-name $APP_NAME --version-label $APP_VERSION --environment-name $APP_ENV_NAME
+
+
+
+
+
+
+
