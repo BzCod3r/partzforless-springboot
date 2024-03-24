@@ -1,19 +1,29 @@
-FROM quay.io/eclipse/che-java8-maven:next
+# OpenJDK 17 Alpine version
+FROM bellsoft/liberica-openjdk-alpine-musl:17 as build
 
-MAINTAINER tech-tejendra
+LABEL authors="muhammadmansoor"
 
-USER root
+LABEL NAME="my-spring-boot-app"
 
-COPY src /home/app/src
-COPY pom.xml /home/app
+# Use a base image with Maven and Java pre-installed
+WORKDIR /app
 
-#ERROR
-#RUN nocmd
+# Copy the Maven project file and source code
+COPY pom.xml .
+COPY src ./src
 
-RUN mkdir -p /var/local/SP
+# Build the application
+RUN ./mvnw -B clean package -e -X
 
-RUN mvn -f /home/app/pom.xml clean package
+# Create the final image
+FROM bellsoft/liberica-openjdk-alpine-musl:17
+WORKDIR /app
 
+# Copy the compiled JAR file from the build stage
+COPY --from=build /app/target/*.jar app.jar
+
+# Expose the port the application runs on
 EXPOSE 8080
 
-ENTRYPOINT ["java", "-jar", "/home/app/target/spring-boot-hello-world-0.0.1-SNAPSHOT.jar"]
+# Run the JAR file when the container starts
+CMD ["java", "-jar", "app.jar"]
