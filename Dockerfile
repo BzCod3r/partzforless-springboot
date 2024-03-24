@@ -1,12 +1,29 @@
-FROM maven:3.9.6 AS build
-WORKDIR /app
-COPY pom.xml /app
-RUN mvn dependency:resolve
-COPY . /app
-RUN mvn clean
-RUN mvn package  -DskipTests -X
+# OpenJDK 17 Alpine version
+FROM bellsoft/liberica-openjdk-alpine-musl:17 as build
 
-FROM openjdk
+LABEL authors="muhammadmansoor"
+
+LABEL NAME="my-spring-boot-app"
+
+# Use a base image with Maven and Java pre-installed
+WORKDIR /app
+
+# Copy the Maven project file and source code
+COPY pom.xml .
+COPY src ./src
+
+# Build the application
+RUN ./mvnw -B clean package -e -X
+
+# Create the final image
+FROM bellsoft/liberica-openjdk-alpine-musl:17
+WORKDIR /app
+
+# Copy the compiled JAR file from the build stage
 COPY --from=build /app/target/*.jar app.jar
+
+# Expose the port the application runs on
 EXPOSE 8080
-CMD ["Java","-jar","app.jar"]
+
+# Run the JAR file when the container starts
+CMD ["java", "-jar", "app.jar"]
